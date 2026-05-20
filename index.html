@@ -387,6 +387,7 @@
         <a href="#resume">个人履历</a>
         <a href="#projects">代表项目</a>
         <a href="#contact">联系方式</a>
+        <a href="admin.html">维护页面</a>
       </div>
     </div>
   </nav>
@@ -396,7 +397,7 @@
       <div>
         <p class="eyebrow">Personal Portfolio · Figma Style Website</p>
         <h1>把复杂问题<br>做成清晰方案</h1>
-        <p class="lead">
+        <p class="lead" id="heroIntro">
           你好，我是 Ben Wang。这个个人网站用于展示自我介绍、学习与工作经历、项目成果和联系方式。
           页面内容可以继续替换成你的真实履历，整体风格偏现代、清爽、专业。
         </p>
@@ -424,7 +425,7 @@
         </svg>
         <div class="status-card">
           <strong>个人定位</strong>
-          <span>教育科技 / AI 应用 / 项目管理 / 内容表达。把经验沉淀成可展示、可传播、可继续迭代的作品。</span>
+          <span id="positionText">教育科技 / AI 应用 / 项目管理 / 内容表达。把经验沉淀成可展示、可传播、可继续迭代的作品。</span>
         </div>
       </div>
     </header>
@@ -432,78 +433,27 @@
     <section class="shell" id="about">
       <div class="section-title">
         <h2>自我介绍</h2>
-        <p>这里适合放 2-3 句话，说明你的专业背景、擅长方向和当前关注的问题。</p>
+        <p id="aboutSummary">这里适合放 2-3 句话，说明你的专业背景、擅长方向和当前关注的问题。</p>
       </div>
-      <div class="grid">
-        <article class="card">
-          <div class="icon blue">01</div>
-          <h3>专业背景</h3>
-          <p>长期关注教育、技术与组织协作，善于把业务需求整理成清晰的产品、课程或项目方案。</p>
-        </article>
-        <article class="card">
-          <div class="icon green">02</div>
-          <h3>能力关键词</h3>
-          <p>需求分析、项目推进、AI 工具应用、知识整理、内容设计、跨团队沟通。</p>
-        </article>
-        <article class="card">
-          <div class="icon violet">03</div>
-          <h3>个人风格</h3>
-          <p>重视结构化表达与持续交付，喜欢把复杂信息变成可理解、可执行的行动路线。</p>
-        </article>
+      <div class="grid" id="aboutCards">
       </div>
     </section>
 
     <section class="shell" id="resume">
       <div class="section-title">
         <h2>个人履历</h2>
-        <p>下面是示例履历结构，你可以把时间、岗位、学校和成果替换为真实信息。</p>
+        <p id="resumeSummary">下面是示例履历结构，你可以把时间、岗位、学校和成果替换为真实信息。</p>
       </div>
-      <div class="timeline">
-        <article class="timeline-item">
-          <div class="date">2024 - 至今</div>
-          <div>
-            <h3>AI 与数字化实践</h3>
-            <p>探索 AI 在学习、内容生成、办公自动化与项目管理中的应用，沉淀可复用流程和案例。</p>
-          </div>
-        </article>
-        <article class="timeline-item">
-          <div class="date">2020 - 2024</div>
-          <div>
-            <h3>项目管理与教育服务</h3>
-            <p>参与课程、培训或业务项目设计，负责计划拆解、进度推进、资料整理与成果交付。</p>
-          </div>
-        </article>
-        <article class="timeline-item">
-          <div class="date">更早经历</div>
-          <div>
-            <h3>学习与职业积累</h3>
-            <p>持续积累专业知识、沟通经验和技术工具能力，形成跨领域解决问题的工作方式。</p>
-          </div>
-        </article>
+      <div class="timeline" id="resumeList">
       </div>
     </section>
 
     <section class="shell" id="projects">
       <div class="section-title">
         <h2>代表项目</h2>
-        <p>建议放 3 个最能代表你的项目，每个项目写目标、你的角色和最终成果。</p>
+        <p id="projectsSummary">建议放 3 个最能代表你的项目，每个项目写目标、你的角色和最终成果。</p>
       </div>
-      <div class="grid">
-        <article class="card">
-          <div class="icon orange">A</div>
-          <h3>知识整理项目</h3>
-          <p>把会议纪要、课程资料或调研信息整理为结构化文档，提升团队复盘和传播效率。</p>
-        </article>
-        <article class="card">
-          <div class="icon blue">B</div>
-          <h3>AI 工具应用</h3>
-          <p>使用 AI 辅助生成网页、信息图、脚本和自动化流程，把想法更快变成可见成果。</p>
-        </article>
-        <article class="card">
-          <div class="icon green">C</div>
-          <h3>课程与培训设计</h3>
-          <p>围绕学习目标设计内容结构、练习任务和展示材料，兼顾实用性与理解门槛。</p>
-        </article>
+      <div class="grid" id="projectList">
       </div>
     </section>
 
@@ -527,13 +477,9 @@
     <section class="shell contact" id="contact">
       <div class="contact-panel">
         <h2>联系方式</h2>
-        <p>欢迎通过 GitHub 或邮箱联系我。这里也可以替换为微信二维码、LinkedIn、公众号或个人博客链接。</p>
+        <p id="contactSummary">欢迎通过 GitHub 或邮箱联系我。这里也可以替换为微信二维码、LinkedIn、公众号或个人博客链接。</p>
       </div>
-      <div class="card">
-        <h3>GitHub</h3>
-        <p><a href="https://github.com/bwangm1976">github.com/bwangm1976</a></p>
-        <h3 style="margin-top: 24px;">Email</h3>
-        <p>20170056@hznu.edu.cn</p>
+      <div class="card" id="contactDetails">
       </div>
     </section>
   </main>
@@ -541,5 +487,122 @@
   <footer>
     <div class="shell">© 2026 Ben Wang. Designed as a Figma-style personal website.</div>
   </footer>
+  <script>
+    const STORAGE_KEY = "personalWebsiteData";
+    const defaultData = {
+      heroIntro: "你好，我是 Ben Wang。这个个人网站用于展示自我介绍、学习与工作经历、项目成果和联系方式。页面内容可以继续替换成你的真实履历，整体风格偏现代、清爽、专业。",
+      position: "教育科技 / AI 应用 / 项目管理 / 内容表达。把经验沉淀成可展示、可传播、可继续迭代的作品。",
+      aboutSummary: "这里适合放 2-3 句话，说明你的专业背景、擅长方向和当前关注的问题。",
+      aboutCards: [
+        { title: "专业背景", text: "长期关注教育、技术与组织协作，善于把业务需求整理成清晰的产品、课程或项目方案。" },
+        { title: "能力关键词", text: "需求分析、项目推进、AI 工具应用、知识整理、内容设计、跨团队沟通。" },
+        { title: "个人风格", text: "重视结构化表达与持续交付，喜欢把复杂信息变成可理解、可执行的行动路线。" }
+      ],
+      resumeSummary: "下面是示例履历结构，你可以把时间、岗位、学校和成果替换为真实信息。",
+      resume: [
+        { date: "2024 - 至今", title: "AI 与数字化实践", text: "探索 AI 在学习、内容生成、办公自动化与项目管理中的应用，沉淀可复用流程和案例。" },
+        { date: "2020 - 2024", title: "项目管理与教育服务", text: "参与课程、培训或业务项目设计，负责计划拆解、进度推进、资料整理与成果交付。" },
+        { date: "更早经历", title: "学习与职业积累", text: "持续积累专业知识、沟通经验和技术工具能力，形成跨领域解决问题的工作方式。" }
+      ],
+      projectsSummary: "建议放 3 个最能代表你的项目，每个项目写目标、你的角色和最终成果。",
+      projects: [
+        { title: "知识整理项目", text: "把会议纪要、课程资料或调研信息整理为结构化文档，提升团队复盘和传播效率。" },
+        { title: "AI 工具应用", text: "使用 AI 辅助生成网页、信息图、脚本和自动化流程，把想法更快变成可见成果。" },
+        { title: "课程与培训设计", text: "围绕学习目标设计内容结构、练习任务和展示材料，兼顾实用性与理解门槛。" }
+      ],
+      contactSummary: "欢迎通过 GitHub 或邮箱联系我。这里也可以替换为微信二维码、LinkedIn、公众号或个人博客链接。",
+      contacts: [
+        { label: "GitHub", value: "github.com/bwangm1976", url: "https://github.com/bwangm1976" },
+        { label: "Email", value: "20170056@hznu.edu.cn", url: "mailto:20170056@hznu.edu.cn" }
+      ]
+    };
+
+    function loadData() {
+      try {
+        return { ...defaultData, ...JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") };
+      } catch {
+        return defaultData;
+      }
+    }
+
+    function setText(id, value) {
+      document.getElementById(id).textContent = value;
+    }
+
+    function appendText(parent, tag, value, className) {
+      const element = document.createElement(tag);
+      element.textContent = value;
+      if (className) {
+        element.className = className;
+      }
+      parent.appendChild(element);
+      return element;
+    }
+
+    function renderCards(containerId, items, icons, colors) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      items.forEach((item, index) => {
+        const article = document.createElement("article");
+        article.className = "card";
+        appendText(article, "div", icons[index] || String(index + 1).padStart(2, "0"), `icon ${colors[index % colors.length]}`);
+        appendText(article, "h3", item.title);
+        appendText(article, "p", item.text);
+        container.appendChild(article);
+      });
+    }
+
+    function renderResume(items) {
+      const container = document.getElementById("resumeList");
+      container.innerHTML = "";
+      items.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "timeline-item";
+        appendText(article, "div", item.date, "date");
+        const body = document.createElement("div");
+        appendText(body, "h3", item.title);
+        appendText(body, "p", item.text);
+        article.appendChild(body);
+        container.appendChild(article);
+      });
+    }
+
+    function renderContacts(items) {
+      const container = document.getElementById("contactDetails");
+      container.innerHTML = "";
+      items.forEach((item, index) => {
+        const title = appendText(container, "h3", item.label);
+        if (index > 0) {
+          title.style.marginTop = "24px";
+        }
+        const paragraph = document.createElement("p");
+        if (item.url) {
+          const link = document.createElement("a");
+          link.href = item.url;
+          link.textContent = item.value;
+          paragraph.appendChild(link);
+        } else {
+          paragraph.textContent = item.value;
+        }
+        container.appendChild(paragraph);
+      });
+    }
+
+    function renderSite() {
+      const data = loadData();
+      setText("heroIntro", data.heroIntro);
+      setText("positionText", data.position);
+      setText("aboutSummary", data.aboutSummary);
+      setText("resumeSummary", data.resumeSummary);
+      setText("projectsSummary", data.projectsSummary);
+      setText("contactSummary", data.contactSummary);
+      renderCards("aboutCards", data.aboutCards, ["01", "02", "03"], ["blue", "green", "violet"]);
+      renderResume(data.resume);
+      renderCards("projectList", data.projects, ["A", "B", "C"], ["orange", "blue", "green"]);
+      renderContacts(data.contacts);
+    }
+
+    renderSite();
+  </script>
 </body>
 </html>

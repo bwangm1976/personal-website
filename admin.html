@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人网站维护页面</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --ink: #111827;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --panel: #ffffff;
+      --blue: #2563eb;
+      --green: #16a34a;
+      --red: #dc2626;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(37, 99, 235, 0.08), transparent 34%),
+        linear-gradient(315deg, rgba(22, 163, 74, 0.08), transparent 34%),
+        var(--bg);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .shell {
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 56px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(32px, 5vw, 54px);
+      letter-spacing: 0;
+    }
+
+    .hint {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    button,
+    .button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button,
+    .button {
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .primary {
+      border-color: transparent;
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    .danger {
+      border-color: rgba(220, 38, 38, 0.22);
+      color: var(--red);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 18px 42px rgba(15, 23, 42, 0.06);
+    }
+
+    .section {
+      margin-bottom: 18px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+    }
+
+    label {
+      display: block;
+      margin: 14px 0 8px;
+      color: #334155;
+      font-weight: 800;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--ink);
+      padding: 12px 14px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+      line-height: 1.65;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: rgba(37, 99, 235, 0.7);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .item {
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #f8fafc;
+    }
+
+    .item-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .item-head button {
+      min-height: 34px;
+      padding: 0 10px;
+      font-size: 14px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .side {
+      position: sticky;
+      top: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .status {
+      margin: 0;
+      color: var(--green);
+      line-height: 1.6;
+      min-height: 24px;
+    }
+
+    .note {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .json-box {
+      min-height: 190px;
+      font-family: Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+
+    @media (max-width: 860px) {
+      header,
+      .layout,
+      .two-col {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .button-row {
+        justify-content: flex-start;
+      }
+
+      .side {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div>
+        <h1>个人网站维护</h1>
+        <p class="hint">修改后点击保存，再打开首页查看效果。数据保存在当前浏览器本地。</p>
+      </div>
+      <div class="button-row">
+        <a class="button" href="index.html">查看首页</a>
+        <button class="primary" id="saveTop" type="button">保存内容</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <form class="panel" id="editor">
+        <section class="section">
+          <h2>自我介绍</h2>
+          <label for="heroIntro">首页介绍</label>
+          <textarea id="heroIntro"></textarea>
+          <label for="position">个人定位</label>
+          <textarea id="position"></textarea>
+          <label for="aboutSummary">自我介绍说明</label>
+          <textarea id="aboutSummary"></textarea>
+          <div id="aboutCards"></div>
+          <button type="button" data-add="aboutCards">增加介绍卡片</button>
+        </section>
+
+        <section class="section">
+          <h2>个人履历</h2>
+          <label for="resumeSummary">履历说明</label>
+          <textarea id="resumeSummary"></textarea>
+          <div id="resume"></div>
+          <button type="button" data-add="resume">增加履历</button>
+        </section>
+
+        <section class="section">
+          <h2>代表项目</h2>
+          <label for="projectsSummary">项目说明</label>
+          <textarea id="projectsSummary"></textarea>
+          <div id="projects"></div>
+          <button type="button" data-add="projects">增加项目</button>
+        </section>
+
+        <section class="section">
+          <h2>联系方式</h2>
+          <label for="contactSummary">联系方式说明</label>
+          <textarea id="contactSummary"></textarea>
+          <div id="contacts"></div>
+          <button type="button" data-add="contacts">增加联系方式</button>
+        </section>
+      </form>
+
+      <aside class="side">
+        <div class="panel">
+          <h2>操作</h2>
+          <div class="button-row" style="justify-content: flex-start;">
+            <button class="primary" id="save" type="button">保存内容</button>
+            <button id="exportData" type="button">导出 JSON</button>
+            <button class="danger" id="reset" type="button">恢复默认</button>
+          </div>
+          <p class="status" id="status"></p>
+          <p class="note">这是静态网页维护器，不需要服务器。保存后数据会写入浏览器本地存储；换浏览器或换电脑需要导出/导入 JSON。</p>
+        </div>
+
+        <div class="panel">
+          <h2>导入 / 导出</h2>
+          <label for="jsonData">JSON 数据</label>
+          <textarea class="json-box" id="jsonData" placeholder="导出的 JSON 会显示在这里，也可以粘贴 JSON 后导入。"></textarea>
+          <div class="button-row" style="justify-content: flex-start; margin-top: 12px;">
+            <button id="importData" type="button">导入 JSON</button>
+            <button id="clearJson" type="button">清空</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "personalWebsiteData";
+    const defaultData = {
+      heroIntro: "你好，我是 Ben Wang。这个个人网站用于展示自我介绍、学习与工作经历、项目成果和联系方式。页面内容可以继续替换成你的真实履历，整体风格偏现代、清爽、专业。",
+      position: "教育科技 / AI 应用 / 项目管理 / 内容表达。把经验沉淀成可展示、可传播、可继续迭代的作品。",
+      aboutSummary: "这里适合放 2-3 句话，说明你的专业背景、擅长方向和当前关注的问题。",
+      aboutCards: [
+        { title: "专业背景", text: "长期关注教育、技术与组织协作，善于把业务需求整理成清晰的产品、课程或项目方案。" },
+        { title: "能力关键词", text: "需求分析、项目推进、AI 工具应用、知识整理、内容设计、跨团队沟通。" },
+        { title: "个人风格", text: "重视结构化表达与持续交付，喜欢把复杂信息变成可理解、可执行的行动路线。" }
+      ],
+      resumeSummary: "下面是示例履历结构，你可以把时间、岗位、学校和成果替换为真实信息。",
+      resume: [
+        { date: "2024 - 至今", title: "AI 与数字化实践", text: "探索 AI 在学习、内容生成、办公自动化与项目管理中的应用，沉淀可复用流程和案例。" },
+        { date: "2020 - 2024", title: "项目管理与教育服务", text: "参与课程、培训或业务项目设计，负责计划拆解、进度推进、资料整理与成果交付。" },
+        { date: "更早经历", title: "学习与职业积累", text: "持续积累专业知识、沟通经验和技术工具能力，形成跨领域解决问题的工作方式。" }
+      ],
+      projectsSummary: "建议放 3 个最能代表你的项目，每个项目写目标、你的角色和最终成果。",
+      projects: [
+        { title: "知识整理项目", text: "把会议纪要、课程资料或调研信息整理为结构化文档，提升团队复盘和传播效率。" },
+        { title: "AI 工具应用", text: "使用 AI 辅助生成网页、信息图、脚本和自动化流程，把想法更快变成可见成果。" },
+        { title: "课程与培训设计", text: "围绕学习目标设计内容结构、练习任务和展示材料，兼顾实用性与理解门槛。" }
+      ],
+      contactSummary: "欢迎通过 GitHub 或邮箱联系我。这里也可以替换为微信二维码、LinkedIn、公众号或个人博客链接。",
+      contacts: [
+        { label: "GitHub", value: "github.com/bwangm1976", url: "https://github.com/bwangm1976" },
+        { label: "Email", value: "20170056@hznu.edu.cn", url: "mailto:20170056@hznu.edu.cn" }
+      ]
+    };
+
+    let data = loadData();
+
+    function loadData() {
+      try {
+        return { ...defaultData, ...JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") };
+      } catch {
+        return structuredClone(defaultData);
+      }
+    }
+
+    function setStatus(message) {
+      document.getElementById("status").textContent = message;
+    }
+
+    function textInput(label, value, key, rows = 3) {
+      return `
+        <label>${label}</label>
+        <textarea rows="${rows}" data-key="${key}">${value || ""}</textarea>
+      `;
+    }
+
+    function itemTemplate(type, item, index) {
+      if (type === "resume") {
+        return `
+          <div class="item" data-type="${type}" data-index="${index}">
+            <div class="item-head"><span>履历 ${index + 1}</span><button class="danger" type="button" data-remove="${type}" data-index="${index}">删除</button></div>
+            <div class="two-col">
+              <div>${textInput("时间", item.date, "date", 1)}</div>
+              <div>${textInput("标题", item.title, "title", 1)}</div>
+            </div>
+            ${textInput("内容", item.text, "text")}
+          </div>
+        `;
+      }
+      if (type === "contacts") {
+        return `
+          <div class="item" data-type="${type}" data-index="${index}">
+            <div class="item-head"><span>联系方式 ${index + 1}</span><button class="danger" type="button" data-remove="${type}" data-index="${index}">删除</button></div>
+            <div class="two-col">
+              <div>${textInput("名称", item.label, "label", 1)}</div>
+              <div>${textInput("显示内容", item.value, "value", 1)}</div>
+            </div>
+            ${textInput("链接地址", item.url, "url", 1)}
+          </div>
+        `;
+      }
+      const title = type === "projects" ? "项目" : "介绍卡片";
+      return `
+        <div class="item" data-type="${type}" data-index="${index}">
+          <div class="item-head"><span>${title} ${index + 1}</span><button class="danger" type="button" data-remove="${type}" data-index="${index}">删除</button></div>
+          ${textInput("标题", item.title, "title", 1)}
+          ${textInput("内容", item.text, "text")}
+        </div>
+      `;
+    }
+
+    function renderList(type) {
+      document.getElementById(type).innerHTML = data[type].map((item, index) => itemTemplate(type, item, index)).join("");
+    }
+
+    function renderForm() {
+      ["heroIntro", "position", "aboutSummary", "resumeSummary", "projectsSummary", "contactSummary"].forEach((key) => {
+        document.getElementById(key).value = data[key] || "";
+      });
+      renderList("aboutCards");
+      renderList("resume");
+      renderList("projects");
+      renderList("contacts");
+    }
+
+    function collectForm() {
+      ["heroIntro", "position", "aboutSummary", "resumeSummary", "projectsSummary", "contactSummary"].forEach((key) => {
+        data[key] = document.getElementById(key).value.trim();
+      });
+      ["aboutCards", "resume", "projects", "contacts"].forEach((type) => {
+        data[type] = Array.from(document.querySelectorAll(`[data-type="${type}"]`)).map((item) => {
+          const result = {};
+          item.querySelectorAll("[data-key]").forEach((field) => {
+            result[field.dataset.key] = field.value.trim();
+          });
+          return result;
+        });
+      });
+    }
+
+    function saveData() {
+      collectForm();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      setStatus("已保存。打开或刷新首页即可查看。");
+    }
+
+    document.querySelectorAll("#save, #saveTop").forEach((button) => {
+      button.addEventListener("click", saveData);
+    });
+
+    document.querySelectorAll("[data-add]").forEach((button) => {
+      button.addEventListener("click", () => {
+        collectForm();
+        const type = button.dataset.add;
+        if (type === "resume") {
+          data.resume.push({ date: "时间", title: "履历标题", text: "履历内容" });
+        } else if (type === "contacts") {
+          data.contacts.push({ label: "联系方式", value: "显示内容", url: "" });
+        } else {
+          data[type].push({ title: "标题", text: "内容" });
+        }
+        renderForm();
+      });
+    });
+
+    document.getElementById("editor").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-remove]");
+      if (!button) {
+        return;
+      }
+      collectForm();
+      data[button.dataset.remove].splice(Number(button.dataset.index), 1);
+      renderForm();
+    });
+
+    document.getElementById("exportData").addEventListener("click", () => {
+      collectForm();
+      document.getElementById("jsonData").value = JSON.stringify(data, null, 2);
+      setStatus("JSON 已导出到文本框。");
+    });
+
+    document.getElementById("importData").addEventListener("click", () => {
+      try {
+        data = { ...defaultData, ...JSON.parse(document.getElementById("jsonData").value) };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        renderForm();
+        setStatus("导入成功，内容已保存。");
+      } catch {
+        setStatus("导入失败：JSON 格式不正确。");
+      }
+    });
+
+    document.getElementById("clearJson").addEventListener("click", () => {
+      document.getElementById("jsonData").value = "";
+    });
+
+    document.getElementById("reset").addEventListener("click", () => {
+      if (!confirm("确定恢复默认内容吗？当前维护内容会被清除。")) {
+        return;
+      }
+      localStorage.removeItem(STORAGE_KEY);
+      data = structuredClone(defaultData);
+      renderForm();
+      setStatus("已恢复默认内容。");
+    });
+
+    renderForm();
+  </script>
+</body>
+</html>
