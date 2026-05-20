@@ -163,15 +163,34 @@
       box-shadow: 0 28px 70px rgba(15, 23, 42, 0.18);
     }
 
+    .portrait img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 36%;
+    }
+
+    .portrait::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 52%, rgba(15, 23, 42, 0.34) 100%);
+      pointer-events: none;
+    }
+
     .portrait svg {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
+      display: none;
     }
 
     .status-card {
       position: absolute;
+      z-index: 1;
       left: 24px;
       right: 24px;
       bottom: 24px;
@@ -312,6 +331,83 @@
       font-weight: 700;
     }
 
+    .achievement-wrap {
+      display: grid;
+      gap: 24px;
+    }
+
+    .achievement-block h3 {
+      margin: 0 0 14px;
+      font-size: 24px;
+    }
+
+    .achievement-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .achievement-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 18px 42px rgba(15, 23, 42, 0.05);
+    }
+
+    .achievement-card h4 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .achievement-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.72;
+    }
+
+    .achievement-card .meta {
+      margin-bottom: 10px;
+      color: var(--blue);
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .achievement-card a {
+      display: inline-flex;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .info-link-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .info-link-card {
+      display: block;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 18px 42px rgba(15, 23, 42, 0.05);
+    }
+
+    .info-link-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-size: 20px;
+    }
+
+    .info-link-card span {
+      color: var(--muted);
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
     .contact {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -368,6 +464,14 @@
         grid-template-columns: 1fr;
       }
 
+      .achievement-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .info-link-grid {
+        grid-template-columns: 1fr;
+      }
+
       .timeline-item {
         grid-template-columns: 1fr;
         gap: 10px;
@@ -386,6 +490,8 @@
         <a href="#about">自我介绍</a>
         <a href="#resume">个人履历</a>
         <a href="#projects">代表项目</a>
+        <a href="#achievements">成果展示</a>
+        <a href="#info-links">信息链接</a>
         <a href="#contact">联系方式</a>
         <a href="admin.html">维护页面</a>
       </div>
@@ -408,21 +514,7 @@
       </div>
 
       <div class="portrait" aria-label="个人网站视觉封面">
-        <svg viewBox="0 0 520 560" role="img" aria-label="抽象个人头像与数据图形">
-          <defs>
-            <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stop-color="#38bdf8"/>
-              <stop offset="1" stop-color="#7c3aed"/>
-            </linearGradient>
-          </defs>
-          <circle cx="260" cy="178" r="82" fill="url(#g1)" opacity="0.95"/>
-          <path d="M132 422c24-86 82-132 128-132s104 46 128 132" fill="url(#g1)" opacity="0.76"/>
-          <path d="M78 112h72M86 148h124M342 112h96M314 148h128M88 476h118M328 476h106" stroke="#e0f2fe" stroke-width="8" stroke-linecap="round" opacity="0.6"/>
-          <circle cx="104" cy="224" r="12" fill="#22c55e"/>
-          <circle cx="420" cy="250" r="12" fill="#f97316"/>
-          <circle cx="402" cy="350" r="10" fill="#38bdf8"/>
-          <path d="M104 224l96-54 120 52 100 28M320 222l82 128" stroke="#e2e8f0" stroke-width="4" opacity="0.36"/>
-        </svg>
+        <img src="assets/profile-photo.jpg" alt="Ben Wang 个人照片">
         <div class="status-card">
           <strong>个人定位</strong>
           <span id="positionText">教育科技 / AI 应用 / 项目管理 / 内容表达。把经验沉淀成可展示、可传播、可继续迭代的作品。</span>
@@ -457,6 +549,31 @@
       </div>
     </section>
 
+    <section class="shell" id="achievements">
+      <div class="section-title">
+        <h2>成果展示</h2>
+        <p id="achievementSummary">集中展示发表项目、论文、专利和个人荣誉，便于访客快速了解你的专业成果。</p>
+      </div>
+      <div class="achievement-wrap">
+        <div class="achievement-block">
+          <h3>发表项目</h3>
+          <div class="achievement-grid" id="publishedProjectList"></div>
+        </div>
+        <div class="achievement-block">
+          <h3>论文</h3>
+          <div class="achievement-grid" id="paperList"></div>
+        </div>
+        <div class="achievement-block">
+          <h3>专利</h3>
+          <div class="achievement-grid" id="patentList"></div>
+        </div>
+        <div class="achievement-block">
+          <h3>个人荣誉</h3>
+          <div class="achievement-grid" id="honorList"></div>
+        </div>
+      </div>
+    </section>
+
     <section class="shell">
       <div class="section-title">
         <h2>技能标签</h2>
@@ -472,6 +589,14 @@
         <span class="chip">文档写作</span>
         <span class="chip">沟通协作</span>
       </div>
+    </section>
+
+    <section class="shell" id="info-links">
+      <div class="section-title">
+        <h2>信息链接</h2>
+        <p id="linkSummary">展示抖音号、学院主页、个人主页等常用外部链接。</p>
+      </div>
+      <div class="info-link-grid" id="infoLinkList"></div>
     </section>
 
     <section class="shell contact" id="contact">
@@ -509,6 +634,24 @@
         { title: "知识整理项目", text: "把会议纪要、课程资料或调研信息整理为结构化文档，提升团队复盘和传播效率。" },
         { title: "AI 工具应用", text: "使用 AI 辅助生成网页、信息图、脚本和自动化流程，把想法更快变成可见成果。" },
         { title: "课程与培训设计", text: "围绕学习目标设计内容结构、练习任务和展示材料，兼顾实用性与理解门槛。" }
+      ],
+      achievementSummary: "集中展示发表项目、论文、专利和个人荣誉，便于访客快速了解你的专业成果。",
+      publishedProjects: [
+        { title: "示例发表项目", meta: "2026 · 项目来源/平台", text: "这里填写项目简介、你的角色、成果影响或展示链接。", url: "" }
+      ],
+      papers: [
+        { title: "示例论文题目", meta: "2026 · 期刊/会议名称", text: "这里填写作者信息、研究方向、摘要亮点或收录情况。", url: "" }
+      ],
+      patents: [
+        { title: "示例专利名称", meta: "专利号/申请号 · 授权/申请中", text: "这里填写专利类型、主要创新点和应用场景。", url: "" }
+      ],
+      honors: [
+        { title: "示例个人荣誉", meta: "2026 · 颁发单位", text: "这里填写获奖等级、评选范围或荣誉说明。", url: "" }
+      ],
+      linkSummary: "展示抖音号、学院主页、个人主页等常用外部链接。",
+      infoLinks: [
+        { label: "抖音号", value: "请在维护页填写你的抖音号", url: "" },
+        { label: "学院主页", value: "请在维护页填写学院主页名称或网址", url: "" }
       ],
       contactSummary: "欢迎通过 GitHub 或邮箱联系我。这里也可以替换为微信二维码、LinkedIn、公众号或个人博客链接。",
       contacts: [
@@ -588,6 +731,42 @@
       });
     }
 
+    function renderAchievements(containerId, items) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      items.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "achievement-card";
+        appendText(article, "h4", item.title || "未命名成果");
+        if (item.meta) {
+          appendText(article, "p", item.meta, "meta");
+        }
+        appendText(article, "p", item.text || "暂无说明。");
+        if (item.url) {
+          const link = document.createElement("a");
+          link.href = item.url;
+          link.textContent = "查看详情";
+          article.appendChild(link);
+        }
+        container.appendChild(article);
+      });
+    }
+
+    function renderInfoLinks(items) {
+      const container = document.getElementById("infoLinkList");
+      container.innerHTML = "";
+      items.forEach((item) => {
+        const card = document.createElement(item.url ? "a" : "div");
+        card.className = "info-link-card";
+        if (item.url) {
+          card.href = item.url;
+        }
+        appendText(card, "strong", item.label || "信息链接");
+        appendText(card, "span", item.value || item.url || "暂无内容");
+        container.appendChild(card);
+      });
+    }
+
     function renderSite() {
       const data = loadData();
       setText("heroIntro", data.heroIntro);
@@ -595,10 +774,17 @@
       setText("aboutSummary", data.aboutSummary);
       setText("resumeSummary", data.resumeSummary);
       setText("projectsSummary", data.projectsSummary);
+      setText("achievementSummary", data.achievementSummary);
+      setText("linkSummary", data.linkSummary);
       setText("contactSummary", data.contactSummary);
       renderCards("aboutCards", data.aboutCards, ["01", "02", "03"], ["blue", "green", "violet"]);
       renderResume(data.resume);
       renderCards("projectList", data.projects, ["A", "B", "C"], ["orange", "blue", "green"]);
+      renderAchievements("publishedProjectList", data.publishedProjects);
+      renderAchievements("paperList", data.papers);
+      renderAchievements("patentList", data.patents);
+      renderAchievements("honorList", data.honors);
+      renderInfoLinks(data.infoLinks);
       renderContacts(data.contacts);
     }
 

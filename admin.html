@@ -275,6 +275,36 @@
         </section>
 
         <section class="section">
+          <h2>成果展示</h2>
+          <label for="achievementSummary">成果展示说明</label>
+          <textarea id="achievementSummary"></textarea>
+
+          <h2 style="margin-top: 24px;">发表项目</h2>
+          <div id="publishedProjects"></div>
+          <button type="button" data-add="publishedProjects">增加发表项目</button>
+
+          <h2 style="margin-top: 24px;">论文</h2>
+          <div id="papers"></div>
+          <button type="button" data-add="papers">增加论文</button>
+
+          <h2 style="margin-top: 24px;">专利</h2>
+          <div id="patents"></div>
+          <button type="button" data-add="patents">增加专利</button>
+
+          <h2 style="margin-top: 24px;">个人荣誉</h2>
+          <div id="honors"></div>
+          <button type="button" data-add="honors">增加荣誉</button>
+        </section>
+
+        <section class="section">
+          <h2>信息链接</h2>
+          <label for="linkSummary">信息链接说明</label>
+          <textarea id="linkSummary"></textarea>
+          <div id="infoLinks"></div>
+          <button type="button" data-add="infoLinks">增加信息链接</button>
+        </section>
+
+        <section class="section">
           <h2>联系方式</h2>
           <label for="contactSummary">联系方式说明</label>
           <textarea id="contactSummary"></textarea>
@@ -331,6 +361,24 @@
         { title: "AI 工具应用", text: "使用 AI 辅助生成网页、信息图、脚本和自动化流程，把想法更快变成可见成果。" },
         { title: "课程与培训设计", text: "围绕学习目标设计内容结构、练习任务和展示材料，兼顾实用性与理解门槛。" }
       ],
+      achievementSummary: "集中展示发表项目、论文、专利和个人荣誉，便于访客快速了解你的专业成果。",
+      publishedProjects: [
+        { title: "示例发表项目", meta: "2026 · 项目来源/平台", text: "这里填写项目简介、你的角色、成果影响或展示链接。", url: "" }
+      ],
+      papers: [
+        { title: "示例论文题目", meta: "2026 · 期刊/会议名称", text: "这里填写作者信息、研究方向、摘要亮点或收录情况。", url: "" }
+      ],
+      patents: [
+        { title: "示例专利名称", meta: "专利号/申请号 · 授权/申请中", text: "这里填写专利类型、主要创新点和应用场景。", url: "" }
+      ],
+      honors: [
+        { title: "示例个人荣誉", meta: "2026 · 颁发单位", text: "这里填写获奖等级、评选范围或荣誉说明。", url: "" }
+      ],
+      linkSummary: "展示抖音号、学院主页、个人主页等常用外部链接。",
+      infoLinks: [
+        { label: "抖音号", value: "请在维护页填写你的抖音号", url: "" },
+        { label: "学院主页", value: "请在维护页填写学院主页名称或网址", url: "" }
+      ],
       contactSummary: "欢迎通过 GitHub 或邮箱联系我。这里也可以替换为微信二维码、LinkedIn、公众号或个人博客链接。",
       contacts: [
         { label: "GitHub", value: "github.com/bwangm1976", url: "https://github.com/bwangm1976" },
@@ -384,6 +432,35 @@
           </div>
         `;
       }
+      if (["publishedProjects", "papers", "patents", "honors"].includes(type)) {
+        const names = {
+          publishedProjects: "发表项目",
+          papers: "论文",
+          patents: "专利",
+          honors: "个人荣誉"
+        };
+        return `
+          <div class="item" data-type="${type}" data-index="${index}">
+            <div class="item-head"><span>${names[type]} ${index + 1}</span><button class="danger" type="button" data-remove="${type}" data-index="${index}">删除</button></div>
+            ${textInput("标题/名称", item.title, "title", 1)}
+            ${textInput("时间 / 来源 / 编号", item.meta, "meta", 1)}
+            ${textInput("说明", item.text, "text")}
+            ${textInput("链接地址", item.url, "url", 1)}
+          </div>
+        `;
+      }
+      if (type === "infoLinks") {
+        return `
+          <div class="item" data-type="${type}" data-index="${index}">
+            <div class="item-head"><span>信息链接 ${index + 1}</span><button class="danger" type="button" data-remove="${type}" data-index="${index}">删除</button></div>
+            <div class="two-col">
+              <div>${textInput("名称", item.label, "label", 1)}</div>
+              <div>${textInput("展示内容", item.value, "value", 1)}</div>
+            </div>
+            ${textInput("链接地址", item.url, "url", 1)}
+          </div>
+        `;
+      }
       const title = type === "projects" ? "项目" : "介绍卡片";
       return `
         <div class="item" data-type="${type}" data-index="${index}">
@@ -399,20 +476,25 @@
     }
 
     function renderForm() {
-      ["heroIntro", "position", "aboutSummary", "resumeSummary", "projectsSummary", "contactSummary"].forEach((key) => {
+      ["heroIntro", "position", "aboutSummary", "resumeSummary", "projectsSummary", "achievementSummary", "linkSummary", "contactSummary"].forEach((key) => {
         document.getElementById(key).value = data[key] || "";
       });
       renderList("aboutCards");
       renderList("resume");
       renderList("projects");
+      renderList("publishedProjects");
+      renderList("papers");
+      renderList("patents");
+      renderList("honors");
+      renderList("infoLinks");
       renderList("contacts");
     }
 
     function collectForm() {
-      ["heroIntro", "position", "aboutSummary", "resumeSummary", "projectsSummary", "contactSummary"].forEach((key) => {
+      ["heroIntro", "position", "aboutSummary", "resumeSummary", "projectsSummary", "achievementSummary", "linkSummary", "contactSummary"].forEach((key) => {
         data[key] = document.getElementById(key).value.trim();
       });
-      ["aboutCards", "resume", "projects", "contacts"].forEach((type) => {
+      ["aboutCards", "resume", "projects", "publishedProjects", "papers", "patents", "honors", "infoLinks", "contacts"].forEach((type) => {
         data[type] = Array.from(document.querySelectorAll(`[data-type="${type}"]`)).map((item) => {
           const result = {};
           item.querySelectorAll("[data-key]").forEach((field) => {
@@ -441,6 +523,10 @@
           data.resume.push({ date: "时间", title: "履历标题", text: "履历内容" });
         } else if (type === "contacts") {
           data.contacts.push({ label: "联系方式", value: "显示内容", url: "" });
+        } else if (type === "infoLinks") {
+          data.infoLinks.push({ label: "信息链接", value: "展示内容", url: "" });
+        } else if (["publishedProjects", "papers", "patents", "honors"].includes(type)) {
+          data[type].push({ title: "标题/名称", meta: "时间 / 来源 / 编号", text: "说明内容", url: "" });
         } else {
           data[type].push({ title: "标题", text: "内容" });
         }
