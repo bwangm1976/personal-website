@@ -413,8 +413,9 @@
     const AUTH_KEY = "personalWebsiteAdminAuth";
     const AUTH_SESSION_KEY = "personalWebsiteAdminSession";
     const AUTH_SALT = "personal-website-admin-v1";
+    const LEGACY_DEFAULT_USER_HASH = "5a89e88b706ed0d73de8e0a20e8579f82b56018aa03535248057da337f4f859d";
     const DEFAULT_AUTH = {
-      userHash: "5a89e88b706ed0d73de8e0a20e8579f82b56018aa03535248057da337f4f859d",
+      userHash: "74c153fbee62b1a7aa0c0f1a349e9bf2c6d877483f8d8157ef46633b939f74c8",
       passHash: "c464417c30271090d8bb47185b329a519356b59900ba89579617eb7ec4d03a54"
     };
     const defaultData = {
@@ -477,7 +478,13 @@
 
     function loadAuth() {
       try {
-        return { ...DEFAULT_AUTH, ...JSON.parse(localStorage.getItem(AUTH_KEY) || "{}") };
+        const storedAuth = JSON.parse(localStorage.getItem(AUTH_KEY) || "{}");
+        const nextAuth = { ...DEFAULT_AUTH, ...storedAuth };
+        if (nextAuth.userHash === LEGACY_DEFAULT_USER_HASH) {
+          nextAuth.userHash = DEFAULT_AUTH.userHash;
+          localStorage.setItem(AUTH_KEY, JSON.stringify(nextAuth));
+        }
+        return nextAuth;
       } catch {
         return DEFAULT_AUTH;
       }
