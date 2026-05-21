@@ -213,6 +213,45 @@
       font-size: 13px;
     }
 
+    .auth-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 32px 16px;
+    }
+
+    .auth-card {
+      width: min(100%, 420px);
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
+    }
+
+    .auth-card h1 {
+      font-size: 34px;
+    }
+
+    .auth-error {
+      min-height: 24px;
+      margin: 12px 0 0;
+      color: var(--red);
+      line-height: 1.6;
+    }
+
+    .protected {
+      display: none;
+    }
+
+    body.authed .protected {
+      display: block;
+    }
+
+    body.authed .auth-screen {
+      display: none;
+    }
+
     @media (max-width: 860px) {
       header,
       .layout,
@@ -232,7 +271,23 @@
   </style>
 </head>
 <body>
-  <main class="shell">
+  <section class="auth-screen" id="authScreen" aria-label="维护页面登录">
+    <form class="auth-card" id="loginForm">
+      <h1>维护页面登录</h1>
+      <p class="hint">请输入管理员用户和密码后继续。</p>
+      <label for="loginUser">用户</label>
+      <input id="loginUser" type="text" autocomplete="username">
+      <label for="loginPassword">密码</label>
+      <input id="loginPassword" type="password" autocomplete="current-password">
+      <div class="button-row" style="justify-content: flex-start; margin-top: 18px;">
+        <button class="primary" type="submit">登录</button>
+        <a class="button" href="index.html">返回首页</a>
+      </div>
+      <p class="auth-error" id="authError"></p>
+    </form>
+  </section>
+
+  <main class="shell protected" id="adminApp">
     <header>
       <div>
         <h1>个人网站维护</h1>
@@ -241,6 +296,7 @@
       <div class="button-row">
         <a class="button" href="index.html">查看首页</a>
         <button class="primary" id="saveTop" type="button">保存内容</button>
+        <button class="danger" id="logout" type="button">退出登录</button>
       </div>
     </header>
 
@@ -326,6 +382,20 @@
         </div>
 
         <div class="panel">
+          <h2>修改密码</h2>
+          <label for="currentPassword">当前密码</label>
+          <input id="currentPassword" type="password" autocomplete="current-password">
+          <label for="newPassword">新密码</label>
+          <input id="newPassword" type="password" autocomplete="new-password">
+          <label for="confirmPassword">确认新密码</label>
+          <input id="confirmPassword" type="password" autocomplete="new-password">
+          <div class="button-row" style="justify-content: flex-start; margin-top: 12px;">
+            <button id="changePassword" type="button">修改密码</button>
+          </div>
+          <p class="note">新密码会加密保存到当前浏览器本地。换浏览器或清除缓存后会恢复默认登录信息。</p>
+        </div>
+
+        <div class="panel">
           <h2>导入 / 导出</h2>
           <label for="jsonData">JSON 数据</label>
           <textarea class="json-box" id="jsonData" placeholder="导出的 JSON 会显示在这里，也可以粘贴 JSON 后导入。"></textarea>
@@ -340,6 +410,13 @@
 
   <script>
     const STORAGE_KEY = "personalWebsiteData";
+    const AUTH_KEY = "personalWebsiteAdminAuth";
+    const AUTH_SESSION_KEY = "personalWebsiteAdminSession";
+    const AUTH_SALT = "personal-website-admin-v1";
+    const DEFAULT_AUTH = {
+      userHash: "5a89e88b706ed0d73de8e0a20e8579f82b56018aa03535248057da337f4f859d",
+      passHash: "c464417c30271090d8bb47185b329a519356b59900ba89579617eb7ec4d03a54"
+    };
     const defaultData = {
       heroIntro: "你好，我是 Ben Wang。这个个人网站用于展示自我介绍、学习与工作经历、项目成果和联系方式。页面内容可以继续替换成你的真实履历，整体风格偏现代、清爽、专业。",
       position: "教育科技 / AI 应用 / 项目管理 / 内容表达。把经验沉淀成可展示、可传播、可继续迭代的作品。",
@@ -387,6 +464,53 @@
     };
 
     let data = loadData();
+    let auth = loadAuth();
+
+    async function hashValue(value) {
+      const input = `${AUTH_SALT}:${value}`;
+      const bytes = new TextEncoder().encode(input);
+      const digest = await crypto.subtle.digest("SHA-256", bytes);
+      return Array.from(new Uint8Array(digest))
+        .map((byte) => byte.toString(16).padStart(2, "0"))
+        .join("");
+    }
+
+    function loadAuth() {
+      try {
+        return { ...DEFAULT_AUTH, ...JSON.parse(localStorage.getItem(AUTH_KEY) || "{}") };
+      } catch {
+        return DEFAULT_AUTH;
+      }
+    }
+
+    function saveAuth(nextAuth) {
+      auth = nextAuth;
+      localStorage.setItem(AUTH_KEY, JSON.stringify(nextAuth));
+    }
+
+    function setAuthError(message) {
+      document.getElementById("authError").textContent = message;
+    }
+
+    function showAdmin() {
+      document.body.classList.add("authed");
+      renderForm();
+    }
+
+    function hideAdmin() {
+      document.body.classList.remove("authed");
+      document.getElementById("loginPassword").value = "";
+    }
+
+    async function verifyLogin(user, password) {
+      const userHash = await hashValue(user.trim());
+      const passHash = await hashValue(password);
+      return userHash === auth.userHash && passHash === auth.passHash;
+    }
+
+    async function verifyPassword(password) {
+      return (await hashValue(password)) === auth.passHash;
+    }
 
     function loadData() {
       try {
@@ -515,6 +639,55 @@
       button.addEventListener("click", saveData);
     });
 
+    document.getElementById("loginForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const user = document.getElementById("loginUser").value;
+      const password = document.getElementById("loginPassword").value;
+
+      if (await verifyLogin(user, password)) {
+        sessionStorage.setItem(AUTH_SESSION_KEY, "true");
+        setAuthError("");
+        showAdmin();
+      } else {
+        setAuthError("用户或密码不正确。");
+      }
+    });
+
+    document.getElementById("logout").addEventListener("click", () => {
+      sessionStorage.removeItem(AUTH_SESSION_KEY);
+      hideAdmin();
+    });
+
+    document.getElementById("changePassword").addEventListener("click", async () => {
+      const currentPassword = document.getElementById("currentPassword").value;
+      const newPassword = document.getElementById("newPassword").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      if (!newPassword || newPassword.length < 6) {
+        setStatus("新密码至少需要 6 位。");
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        setStatus("两次输入的新密码不一致。");
+        return;
+      }
+
+      if (!(await verifyPassword(currentPassword))) {
+        setStatus("当前密码不正确，无法修改。");
+        return;
+      }
+
+      saveAuth({
+        userHash: auth.userHash,
+        passHash: await hashValue(newPassword)
+      });
+      document.getElementById("currentPassword").value = "";
+      document.getElementById("newPassword").value = "";
+      document.getElementById("confirmPassword").value = "";
+      setStatus("密码已修改。");
+    });
+
     document.querySelectorAll("[data-add]").forEach((button) => {
       button.addEventListener("click", () => {
         collectForm();
@@ -575,7 +748,11 @@
       setStatus("已恢复默认内容。");
     });
 
-    renderForm();
+    if (sessionStorage.getItem(AUTH_SESSION_KEY) === "true") {
+      showAdmin();
+    } else {
+      hideAdmin();
+    }
   </script>
 </body>
 </html>
